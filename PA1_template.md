@@ -2,10 +2,11 @@
 
 ## Loading and preprocessing the data
 
-Data is loaded and the date field is converted to Date data type.
+Data is loaded and the date field is converted to Date data type. 
 
 
 ```r
+download.file(url="https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", destfile="activity.zip")
 unzip(zipfile="activity.zip")
 
 df = read.csv(file="activity.csv", stringsAsFactors = F)
@@ -90,6 +91,8 @@ apply(df, 2, function(x) length(which(is.na(x))))
 ##    steps     date interval 
 ##     2304        0        0
 ```
+
+Certain date has NA value for all of the observation on that date. Using average steps on those dates to replace the NA value is not feasible. Using average number of steps taken per day with the same interval is more feasible. Also, by using mean per interval, we hope to preserve the daily trend for steps taken.
 
 New data set, replacing NA value in steps with the average number of steps taken per day with the same interval:
 

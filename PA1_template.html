@@ -67,7 +67,8 @@ img {
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
 <p>Data is loaded and the date field is converted to Date data type.</p>
-<pre class="r"><code>unzip(zipfile=&quot;activity.zip&quot;)
+<pre class="r"><code>download.file(url=&quot;https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip&quot;, destfile=&quot;activity.zip&quot;)
+unzip(zipfile=&quot;activity.zip&quot;)
 
 df = read.csv(file=&quot;activity.csv&quot;, stringsAsFactors = F)
 df$date = as.POSIXct(df$date,format=&quot;%Y-%m-%d&quot;)</code></pre>
@@ -107,6 +108,7 @@ g + geom_line()</code></pre>
 <pre class="r"><code>apply(df, 2, function(x) length(which(is.na(x))))</code></pre>
 <pre><code>##    steps     date interval 
 ##     2304        0        0</code></pre>
+<p>Certain date has NA value for all of the observation on that date. Using average steps on those dates to replace the NA value is not feasible. Using average number of steps taken per day with the same interval is more feasible. Also, by using mean per interval, we hope to preserve the daily trend for steps taken.</p>
 <p>New data set, replacing NA value in steps with the average number of steps taken per day with the same interval:</p>
 <pre class="r"><code>df2 = df %&gt;% 
   mutate(steps = ifelse(is.na(steps),steps_perinterval$steps[steps_perinterval$interval %in% interval],steps))</code></pre>
